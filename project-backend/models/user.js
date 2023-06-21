@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const { handleMogooseError } = require("../middlewares");
+const { handleMongooseError } = require("../helpers/index");
 
 const { emailRegexp } = require("../constants/users");
 
@@ -25,7 +25,7 @@ const userSchema = new Schema({
 
 }, { versionKey: false, timestamps: true });
 
-userSchema.post("save", handleMogooseError);
+userSchema.post("save", handleMongooseError);
 
 // створюємо монгус - Модель
 // клас  пишемо з великої літери

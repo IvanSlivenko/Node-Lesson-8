@@ -1,7 +1,7 @@
 // const { string } = require("joi");
 const { Schema, model } = require("mongoose");
 
-const { handleMogooseError } = require("../middlewares")
+const { handleMongooseError } = require("../helpers");
 const { genreList, releaseDateRagexp} = require("../constants/movies");
 
 
@@ -36,7 +36,7 @@ const movieSchema = new Schema({
   
 }, { versionKey: false, timestamps: true });
 
-movieSchema.post("save", handleMogooseError);
+movieSchema.post("save", handleMongooseError);
 
 
 // створюємо монгус - Модель
