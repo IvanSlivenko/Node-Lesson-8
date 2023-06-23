@@ -22,7 +22,7 @@ const signup = async (req, res) => {
   res.status(201).json({
     name: newUser.name,
     email: newUser.email,
-    // password:newUser.password,
+    password:newUser.password,
   });
 };
 
@@ -49,15 +49,15 @@ const signin = async (req, res) => {
     token,
   });
 
-  // const hashPassword = await bcrypt.hash(password, 10);
+  const hashPassword = await bcrypt.hash(password, 10);
 
-  // const newUser = await User.create({ ...req.body, password: hashPassword });
+  const newUser = await User.create({ ...req.body, password: hashPassword });
 
-  // res.status(201).json({
-  //   name: newUser.name,
-  //   email: newUser.email,
-  //   password:newUser.password,
-  // });
+  res.status(201).json({
+    name: newUser.name,
+    email: newUser.email,
+    password:newUser.password,
+  });
 };
 
 module.exports = {
