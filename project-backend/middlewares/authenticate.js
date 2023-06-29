@@ -18,10 +18,11 @@ const authenticate = async (req, res, next) => {
         // console.log("id developments");
         // console.log("id",id);
       const user = await User.findById(id);
-      if (!user) {
+      if (!user || !user.token) {
        
         next(HttpError(401));
       }
+      req.user = user;
       next();
     }
     catch {

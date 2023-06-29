@@ -5,13 +5,41 @@ const { ctrlWrapper } = require("../decorators");
 // const movieAddSchema = require("../schemas/movies");
 
 const getAllMovies = async (req, res) => {
-
-    // const result = await moviesService.getAllMovies();
+  // const result = await moviesService.getAllMovies();
   // Отримуємо всі данні з колекції
   // const result = await Movie.find({}, "createdAt updatedAt");
-  const result = await Movie.find({}, "-createdAt -updatedAt");
-    res.json(result);
- 
+  const { _id: owner } = req.user;
+
+  console.log(req.query);
+  const { page = 1, limit = 10, ...query } = req.query;
+  const skip = (page - 1) * limit;
+
+  // console.log(req.query);
+
+  //Загальні данні (тільки owner - id )
+  // const result = await Movie.find({ owner }, "-createdAt -updatedAt");
+
+  // Деталізовані данні owner
+  // const result = await Movie.find({ owner }, "-createdAt -updatedAt").populate("owner");
+
+  // Деталізовані данні owner отримуємо частину фільмів
+  // skip - скільки пропустити
+  // limit - скільки взяти
+  const result = await Movie.find({ owner, ...query }, "-createdAt -updatedAt", { skip, limit }).populate("owner");
+  
+  // const { length: total } = await Movie.find({owner});
+
+  const total = await Movie.where({ owner, ...query }).countDocuments();
+  // const total = await Movie.where({ owner}).countDocuments();
+  console.log(total);
+
+
+   // Вибіркові Деталізовані данні owner
+  // const result = await Movie.find(
+  //   { owner, ...req.query },
+  //   "-createdAt -updatedAt"
+  // ).populate("owner", "email name");
+  res.json(result);
 }
 
 const getMovieById=async (req, res) => {
@@ -36,7 +64,9 @@ const getMovieById=async (req, res) => {
 
 const addMovie=async (req, res) => { 
   
-    const result = await Movie.create(req.body);
+  //console.log(req.user);
+  const { _id: owner } = req.user;
+  const result = await Movie.create({ ...req.body,owner });
     res.status(201).json(result);
   
  }
